@@ -1,17 +1,21 @@
+import { render } from '@testing-library/react';
 import React, { useState } from 'react';
-
+import { Redirect, useHistory } from 'react-router-dom';
 function LoginForm({ Login, error }) {
     const [details, setDetails] = useState({ name: '', email: '', password: '' });
 
     const submitHandler = (e) => {
+        console.log(e);
         e.preventDefault();
-        Login(details);
+        const logdetails = Login(details);
     };
 
     return (
         <form onSubmit={submitHandler}>
             <div className="form-inner">
-                <h2>Login</h2>
+                <center>
+                    <h2>Login</h2>
+                </center>
                 {error != '' ? <div className="error">{error}</div> : ''}
                 <div className="form-group">
                     <label>
