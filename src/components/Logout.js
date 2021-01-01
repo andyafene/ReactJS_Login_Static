@@ -1,25 +1,23 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-
-function Logout(userArg) {
-    const user = userArg.user;
-    const history = useHistory();
-    let handleClick = (e) => {
+import React, { useState } from 'react';
+import { Redirect, useHistory } from 'react-router-dom';
+import { logout } from '../utils/authProvider';
+function Logout() {
+    let history = useHistory();
+    const handleClick = (e) => {
         e.preventDefault();
-        history.push('/');
+        console.log(localStorage.getItem('auth-token'));
+        logout(localStorage.getItem('auth-token'));
+        if (!localStorage.getItem('auth-toke')) {
+            history.push('/');
+        }
     };
 
     return (
         <div className="form-group">
-            <button
-                type="button"
-                onClick={() => {
-                    history.push('/welcome');
-                }}>
+            <button type="button" onClick={handleClick}>
                 Logout
             </button>
         </div>
     );
 }
-
 export default Logout;
