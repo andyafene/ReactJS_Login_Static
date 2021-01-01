@@ -1,17 +1,33 @@
-import { render } from '@testing-library/react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
+import { login } from '../utils/authProvider';
+import { createTokenProvider } from '../utils/tokenProvider';
+import jwtDecode from 'jwt-decode';
 function LoginForm({ Login, error }) {
     const [details, setDetails] = useState({ name: '', email: '', password: '' });
-
+    const tokenProvider = createTokenProvider();
+    const history = useHistory();
     const submitHandler = (e) => {
-        console.log(e);
         e.preventDefault();
-        const logdetails = Login(details);
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user: details })
+        };
+
+        fetch('http://localhost:5000/api/auth/signin', requestOptions).then((response) => {
+            response.json();
+            login(response.headers.get('auth-token'));
+        });
+
+        // console.log(jwtDecode(localStorage.getItem('auth-token')));
+        if (localStorage.getItem('auth-token')) {
+            history.push('/welcome');
+        }
     };
 
     return (
-        <form onSubmit={submitHandler}>
+        <form type="POST" onSubmit={submitHandler}>
             <div className="form-inner">
                 <center>
                     <h2>Login</h2>
